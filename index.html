@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rogue Cell Lab</title>
+<meta name="description" content="The Rogue Cell Lab at the University of Gothenburg studies how B cells turn from protectors into drivers of cancer and autoimmune disease.">
+<link rel="icon" type="image/png" href="logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: the lab logo, extended. A dark field under the microscope, cyan for the orderly cells,
+   orange-red for the one that breaks rank. Single dark theme by choice, to match the logo. */
+:root {
+  --paper: #06080A;
+  --surface: #0E1216;
+  --ink: #ECEFF2;
+  --muted: #949BA4;
+  --line: #232A31;
+  --cyan: #1CC4D9;
+  --rogue: #FF4E1C;
+  --display: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+a:focus-visible { outline: 2px solid var(--rogue); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; }
+
+.wrap { width: min(1080px, 100% - 48px); margin-inline: auto; }
+
+/* Header */
+.top {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px;
+  padding-block: 16px;
+}
+.mark { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; }
+.mark img { width: 40px; height: 40px; mix-blend-mode: lighten; }
+.mark b { color: var(--rogue); font-weight: 600; }
+nav { display: flex; flex-wrap: wrap; gap: 6px 22px; font-family: var(--mono); font-size: 13.5px; }
+nav a { text-decoration: none; color: var(--muted); }
+nav a:hover { color: var(--cyan); }
+
+/* Hero */
+.hero { position: relative; border-block: 1px solid var(--line); overflow: hidden; }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero .wrap { position: relative; padding-block: 18px clamp(56px, 9vw, 112px); }
+.hero-text { max-width: 660px; }
+.hero-logo { width: clamp(92px, 13vw, 132px); height: auto; display: block; mix-blend-mode: lighten; margin-left: -8px; margin-bottom: 18px; }
+.kicker { font-family: var(--mono); font-size: 13px; letter-spacing: 0.02em; color: var(--muted); }
+h1 {
+  font-size: clamp(40px, 8vw, 88px); line-height: 1; letter-spacing: 0.04em; text-transform: uppercase;
+  margin-block: 0 26px;
+}
+h1 b { color: var(--rogue); font-weight: 600; }
+h1 span { display: block; font-size: 0.42em; letter-spacing: 0.32em; color: var(--muted); font-weight: 500; margin-top: 0.5em; }
+.lede { font-size: clamp(19px, 2.2vw, 22px); line-height: 1.45; max-width: 31em; }
+.lede + .lede { margin-top: 14px; color: var(--muted); font-size: 17px; }
+
+/* Sections */
+section { padding-block: clamp(56px, 8vw, 92px); border-bottom: 1px solid var(--line); }
+.sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 36px; }
+.sec-head h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.01em; }
+.num { font-family: var(--mono); font-size: 13px; color: var(--rogue); }
+
+/* Research */
+.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px 56px; }
+.theme { border-top: 2px solid var(--cyan); padding-top: 20px; }
+.theme.rogue { border-top-color: var(--rogue); }
+.theme h3 { font-size: 24px; line-height: 1.2; margin-bottom: 12px; }
+.theme p { max-width: 34em; color: var(--ink); }
+.markers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; padding: 0; list-style: none; }
+.markers li {
+  font-family: var(--mono); font-size: 13px; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 5px 12px; background: var(--surface);
+}
+.aim { margin-top: 44px; font-size: clamp(21px, 2.8vw, 28px); line-height: 1.35; font-weight: 500; max-width: 26em; }
+.aim b { color: var(--rogue); font-weight: 500; }
+
+/* People */
+.people { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.person { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 6px; }
+.photo {
+  width: 132px; height: 132px; border-radius: 50%; margin-bottom: 14px; overflow: hidden;
+  border: 2px solid var(--cyan); background: var(--paper);
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 30px; color: var(--cyan);
+}
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.person h3 { font-size: 23px; line-height: 1.2; }
+.role { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
+.person p { color: var(--muted); font-size: 15.5px; margin-top: 8px; }
+.person a + a { margin-top: 2px; }
+.person a { font-size: 15px; margin-top: 10px; word-break: break-word; align-self: flex-start; text-decoration-color: var(--cyan); text-underline-offset: 4px; }
+
+.alumni { margin-top: 52px; }
+.alumni h3 { font-size: 22px; margin-bottom: 6px; }
+.alumni > p { color: var(--muted); font-size: 15.5px; max-width: 40em; }
+.alumni-list { list-style: none; margin: 20px 0 0; padding: 0; }
+.alumni-list li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding-block: 13px; border-top: 1px solid var(--line); }
+.alumni-list li:last-child { border-bottom: 1px solid var(--line); }
+.alumni-list .yrs { font-family: var(--mono); font-size: 13.5px; color: var(--cyan); font-variant-numeric: tabular-nums; padding-top: 3px; }
+.alumni-list .who span { display: block; color: var(--muted); font-size: 15px; }
+
+/* Publications */
+.pubs-window { max-height: 440px; overflow-y: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); padding-inline: 20px; scrollbar-color: var(--line) transparent; }
+.pubs-window:focus-visible { outline: 2px solid var(--rogue); outline-offset: 3px; }
+.pubs { list-style: none; margin: 0; padding: 0; }
+.pubs li:first-child { border-top: 0; }
+.pubs li { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding-block: 16px; border-top: 1px solid var(--line); }
+
+.pubs .yr { font-family: var(--mono); font-size: 14px; color: var(--cyan); font-variant-numeric: tabular-nums; padding-top: 3px; }
+.pubs .ti { max-width: 44em; }
+.pubs .ti a { text-decoration: none; }
+.pubs .ti a:hover { color: var(--cyan); text-decoration: underline; text-underline-offset: 4px; }
+.pubs .jr { display: block; color: var(--muted); font-size: 14.5px; font-style: italic; margin-top: 2px; }
+.more { margin-top: 28px; font-size: 16px; }
+.more a { text-decoration-color: var(--cyan); text-underline-offset: 4px; }
+
+/* Funding */
+.thanks { max-width: 36em; font-size: 18px; }
+.funders { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 40px; }
+.funders li { padding: 14px 0 14px 16px; border-top: 1px solid var(--line); border-left: 2px solid var(--cyan); margin-top: 12px; border-top: 0; }
+
+/* Contact */
+.contact { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px 56px; }
+.contact h3 { font-family: var(--mono); font-weight: 400; font-size: 13px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 8px; }
+.contact address { font-style: normal; }
+.big-mail + .big-mail { margin-top: 10px; }
+.big-mail { display: block; font-size: clamp(18px, 2.4vw, 22px); font-weight: 500; word-break: break-word; text-decoration-color: var(--rogue); text-underline-offset: 5px; }
+
+footer { padding-block: 28px 44px; color: var(--muted); font-size: 14px; }
+
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .wrap { width: min(1080px, 100% - 36px); }
+  .pubs li { grid-template-columns: 48px 1fr; gap: 12px; }
+  .alumni-list li { grid-template-columns: 1fr; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="#top"><img src="logo-mark.png" alt="" width="40" height="40">The <b>Rogue</b> Cell Lab</a>
+  <nav aria-label="Sections">
+    <a href="#research">Research</a>
+    <a href="#people">People</a>
+    <a href="#publications">Publications</a>
+    <a href="#funding">Funding</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-text">
+        <img class="hero-logo" src="logo-mark.png" alt="The Rogue Cell Lab logo: an orange and cyan cell" width="132" height="132">
+        <h1>The <b>Rogue</b> Cell <span>Lab</span></h1>
+        <p class="lede">B cells are built to protect us. We study what happens when one of them stops following the rules.</p>
+        <p class="lede">Our work follows B cells into two diseases where they turn against the body: blood cancer and autoimmunity.</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="research">
+    <div class="wrap">
+      <div class="sec-head"><span class="num">01</span><h2>Research</h2></div>
+      <div class="themes">
+        <article class="theme rogue">
+          <h3>B-cell cancers</h3>
+          <p>Leukemia and lymphoma cells do not survive alone. We examine how malignant B cells talk to the tissue around them, slip past immune surveillance, and lean on B-cell receptor signaling to grow, spread and withstand therapy.</p>
+        </article>
+        <article class="theme">
+          <h3>Autoimmunity</h3>
+          <p>Healthy immune systems remove or silence B cells that recognize the body's own tissue. We ask how that tolerance is kept in place, and what fails when self-reactive B cells escape and drive diseases such as rheumatoid arthritis.</p>
+        </article>
+      </div>
+      <p class="aim">The goal is to understand how a protective cell becomes a <b>driver of disease</b>, and to turn that understanding into better treatments.</p>
+    </div>
+  </section>
+
+  <section id="people">
+    <div class="wrap">
+      <div class="sec-head"><span class="num">02</span><h2>People</h2></div>
+      <div class="people">
+        <article class="person">
+          <div class="photo"><img src="alessandro.jpg" alt="Alessandro Camponeschi" width="400" height="400"></div>
+          <h3>Alessandro Camponeschi</h3>
+          <span class="role">Lab head · Researcher</span>
+          <p>Department of Rheumatology and Inflammation Research, University of Gothenburg.</p>
+          <a href="mailto:alessandro.camponeschi@rheuma.gu.se">alessandro.camponeschi@rheuma.gu.se</a>
+          <a href="https://www.gu.se/en/about/find-staff/alessandrocamponeschi">University profile</a>
+        </article>
+        <article class="person">
+          <div class="photo"><img src="francesca.jpg" alt="Francesca La Gualana" width="400" height="400"></div>
+          <h3>Francesca La Gualana</h3>
+          <span class="role">Postdoctoral researcher</span>
+          <p>Department of Rheumatology and Inflammation Research, University of Gothenburg.</p>
+          <a href="mailto:francesca.la.gualana@gu.se">francesca.la.gualana@gu.se</a>
+          <a href="https://scholar.google.com/citations?user=qqZf67IAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Google Scholar</a>
+        </article>
+      </div>
+
+      <div class="alumni" id="alumni">
+        <h3>Alumni</h3>
+        <p>People who trained or worked in the lab.</p>
+        <ul class="alumni-list">
+          <li><span class="yrs">2026</span><span class="who">Rosa Lacordaire<span>Master's student</span></span></li>
+          <li><span class="yrs">2025–2026</span><span class="who">Anja Šimpraga<span>Master's student</span></span></li>
+          <li><span class="yrs">2024–2026</span><span class="who">Erik Engström<span>Assistant researcher</span></span></li>
+          <li><span class="yrs">2024–2026</span><span class="who">Gönlüm Bahar Uçar<span>Assistant researcher</span></span></li>
+          <li><span class="yrs">2023</span><span class="who">Nadja Herrmann<span>Master's student</span></span></li>
+          <li><span class="yrs">2019–2021</span><span class="who">Negar Ayoubzadeh<span>Traineeship</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="publications">
+    <div class="wrap">
+      <div class="sec-head"><span class="num">03</span><h2>Publications</h2></div>
+      <div class="pubs-window" tabindex="0" role="region" aria-label="Publication list, scrollable">
+      <ol class="pubs">
+        <li><span class="yr">2026</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/42759774/">Age-stratified CD19+ B-cell reference values in children and adolescents: a systematic review and meta-analysis</a><span class="jr">J Allergy Clin Immunol</span></span></li>
+        <li><span class="yr">2026</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/42530360/">Genome-wide methylation profiling identifies signatures of pain, fatigue and health scores in women with systemic lupus erythematosus</a><span class="jr">Rheumatology (Oxford)</span></span></li>
+        <li><span class="yr">2026</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/42095480/">Unfavourable H-CDR3 Loops in preB Cells Lead to Highly Expanded Plasma Cell Clones</a><span class="jr">Eur J Immunol</span></span></li>
+        <li><span class="yr">2025</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/40259340/">Transitional and CD21- PD-1+ B cells are associated with remission in early rheumatoid arthritis</a><span class="jr">BMC Rheumatol</span></span></li>
+        <li><span class="yr">2025</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/40145658/">Biology wet lab e-learning during and after the COVID-19 pandemic: A review of student learning and experiences</a><span class="jr">Biochem Mol Biol Educ</span></span></li>
+        <li><span class="yr">2025</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/40026844/">Design and application of a fluorescent probe for imaging of endogenous Bruton's tyrosine kinase with preserved enzymatic activity</a><span class="jr">RSC Chem Biol</span></span></li>
+        <li><span class="yr">2025</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/39910039/">Testosterone exacerbates neutrophilia and cardiac injury in myocardial infarction via actions in bone marrow</a><span class="jr">Nat Commun</span></span></li>
+        <li><span class="yr">2024</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/39632794/">A landscape of X-inactivation during human T cell development</a><span class="jr">Nat Commun</span></span></li>
+        <li><span class="yr">2024</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/39364393/">Targeting CD38 with monoclonal antibodies disrupts key survival pathways in paediatric Burkitt's lymphoma malignant B cells</a><span class="jr">Clin Transl Immunology</span></span></li>
+        <li><span class="yr">2024</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/38570939/">Correlation of Professional Antigen-Presenting Tbet+CD11c+ B Cells With Bone Destruction in Untreated Rheumatoid Arthritis</a><span class="jr">Arthritis Rheumatol</span></span></li>
+        <li><span class="yr">2023</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/36936947/">Clonal relationships of memory B cell subsets in autoimmune mice</a><span class="jr">Front Immunol</span></span></li>
+        <li><span class="yr">2023</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/36845129/">Dual stimulation by autoantigen and CpG fosters the proliferation of exhausted rheumatoid factor-specific CD21low B cells in hepatitis C virus-cured mixed cryoglobulinemia</a><span class="jr">Front Immunol</span></span></li>
+        <li><span class="yr">2023</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/36806740/">Lipid Nanoparticles Deliver the Therapeutic VEGFA mRNA In Vitro and In Vivo and Transform Extracellular Vesicles for Their Functional Extensions</a><span class="jr">Adv Sci (Weinh)</span></span></li>
+        <li><span class="yr">2022</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/36473726/">Single-cell RNA sequencing analyses: interference by the genes that encode the B-cell and T-cell receptors</a><span class="jr">Brief Funct Genomics</span></span></li>
+        <li><span class="yr">2022</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/36380692/">A close-up on the expanding landscape of CD21-/low B cells in humans</a><span class="jr">Clin Exp Immunol</span></span></li>
+        <li><span class="yr">2022</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/35819358/">Human CD38 regulates B cell antigen receptor dynamic organization in normal and malignant B cells</a><span class="jr">J Exp Med</span></span></li>
+        <li><span class="yr">2021</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/34539680/">Editorial: The B-Side of B Cells</a><span class="jr">Front Immunol</span></span></li>
+        <li><span class="yr">2021</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/33987955/">RAG1 co-expression signature identifies ETV6-RUNX1-like B-cell precursor acute lymphoblastic leukemia in children</a><span class="jr">Cancer Med</span></span></li>
+        <li><span class="yr">2020</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/32765511/">Nicotine Changes the microRNA Profile to Regulate the FOXO Memory Program of CD8+ T Cells in Rheumatoid Arthritis</a><span class="jr">Front Immunol</span></span></li>
+        <li><span class="yr">2020</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/31969220/">Rheumatoid factor-producing CD21low anergic clonal B-cells in essential mixed cryoglobulinaemia: a model for autoantigen-driven pathogenesis of infectious and non-infectious cryoglobulinaemias</a><span class="jr">Clin Exp Rheumatol</span></span></li>
+        <li><span class="yr">2019</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/31775043/">ERG Controls B Cell Development by Promoting Igh V-to-DJ Recombination</a><span class="jr">Cell Rep</span></span></li>
+        <li><span class="yr">2019</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/31551417/">Linkage between endosomal escape of LNP-mRNA and loading into EVs for transport to other cells</a><span class="jr">Nat Commun</span></span></li>
+        <li><span class="yr">2019</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/31141193/">CD21-/low B cells associate with joint damage in rheumatoid arthritis patients</a><span class="jr">Scand J Immunol</span></span></li>
+        <li><span class="yr">2019</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/30949178/">Dissecting Integrin Expression and Function on Memory B Cells in Mice and Humans in Autoimmunity</a><span class="jr">Front Immunol</span></span></li>
+        <li><span class="yr">2019</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/30508539/">Switched CD21-/low B cells with an antigen-presenting phenotype in the infant thymus</a><span class="jr">J Allergy Clin Immunol</span></span></li>
+        <li><span class="yr">2019</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/30484860/">CD99 expression is strongly associated with clinical outcome in children with B-cell precursor acute lymphoblastic leukaemia</a><span class="jr">Br J Haematol</span></span></li>
+        <li><span class="yr">2018</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/29802242/">Testosterone is an endogenous regulator of BAFF and splenic B cell number</a><span class="jr">Nat Commun</span></span></li>
+        <li><span class="yr">2018</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/29720252/">Estrogen induces St6gal1 expression and increases IgG sialylation in mice and patients with rheumatoid arthritis: a potential explanation for the increased risk of rheumatoid arthritis in postmenopausal women</a><span class="jr">Arthritis Res Ther</span></span></li>
+        <li><span class="yr">2018</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/29601939/">DEC1/STRA13 is a key negative regulator of activation-induced proliferation of human B cells highly expressed in anergic cells</a><span class="jr">Immunol Lett</span></span></li>
+        <li><span class="yr">2018</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/29266242/">Age-associated B cells expanded in autoimmune mice are memory cells sharing H-CDR3-selected repertoires</a><span class="jr">Eur J Immunol</span></span></li>
+        <li><span class="yr">2016</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/26811981/">Hepatitis B virus causes mixed cryoglobulinaemia by driving clonal expansion of innate B-cells producing a VH1-69-encoded antibody</a><span class="jr">Clin Exp Rheumatol</span></span></li>
+        <li><span class="yr">2015</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/25959489/">Absence of surrogate light chain results in spontaneous autoreactive germinal centres expanding V(H)81X-expressing B cells</a><span class="jr">Nat Commun</span></span></li>
+        <li><span class="yr">2015</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/25657650/">Intravenous Immunoglobulin and Immunomodulation of B-Cell: in vitro and in vivo Effects</a><span class="jr">Front Immunol</span></span></li>
+        <li><span class="yr">2014</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/25407649/">Intravenous immunoglobulin replacement therapy in common variable immunodeficiency induces B cell depletion through differentiation into apoptosis-prone CD21(low) B cells</a><span class="jr">Immunol Res</span></span></li>
+        <li><span class="yr">2014</span><span class="ti"><a href="https://pubmed.ncbi.nlm.nih.gov/24792875/">Dysregulated extracellular signal-regulated kinase signaling associated with impaired B-cell receptor endocytosis in patients with common variable immunodeficiency</a><span class="jr">J Allergy Clin Immunol</span></span></li>
+      </ol>
+      </div>
+      <p class="more"><a href="https://pubmed.ncbi.nlm.nih.gov/?term=camponeschi+alessandro&amp;sort=date">Search on PubMed</a> · <a href="https://www.gu.se/en/about/find-staff/alessandrocamponeschi">University of Gothenburg profile</a></p>
+    </div>
+  </section>
+
+  <section id="funding">
+    <div class="wrap">
+      <div class="sec-head"><span class="num">04</span><h2>Funding</h2></div>
+      <p class="thanks">We are grateful to the foundations and funding bodies whose support makes our research possible.</p>
+      <ul class="funders">
+        <li>Wilhelm och Martina Lundgrens Vetenskapsfond</li>
+        <li>Magnus Bergvalls Stiftelse</li>
+        <li>Sahlgrenska Forskningsmedel Område 4</li>
+        <li>Kungl. Vetenskaps- och Vitterhets-Samhället i Göteborg</li>
+        <li>Clas Groschinskys Minnesfond</li>
+        <li>Bertil och Ebon Norlins stiftelse för medicinsk forskning</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="sec-head"><span class="num">05</span><h2>Contact</h2></div>
+      <div class="contact">
+        <div>
+          <h3>EMAIL</h3>
+          <a class="big-mail" href="mailto:alessandro.camponeschi@rheuma.gu.se">alessandro.camponeschi@rheuma.gu.se</a>
+          <a class="big-mail" href="mailto:francesca.la.gualana@gu.se">francesca.la.gualana@gu.se</a>
+        </div>
+        <div>
+          <h3>VISIT</h3>
+          <address>Guldhedsgatan 10A, floor 4<br>413 46 Göteborg, Sweden</address>
+        </div>
+        <div>
+          <h3>POST</h3>
+          <address>Box 480<br>405 30 Göteborg, Sweden</address>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>The Rogue Cell Lab · Department of Rheumatology and Inflammation Research · University of Gothenburg</p>
+</footer>
+
+<script>
+(function () {
+  var canvas = document.getElementById('field');
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cells = [], w = 0, h = 0, gap = 38;
+  var s = getComputedStyle(document.documentElement);
+  var cyan = s.getPropertyValue('--cyan').trim() || '#1CC4D9';
+  var rogue = s.getPropertyValue('--rogue').trim() || '#FF4E1C';
+
+  function resize() {
+    var r = canvas.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = r.width; h = r.height;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cells = [];
+    for (var y = gap / 2; y < h; y += gap) {
+      for (var x = gap / 2; x < w; x += gap) {
+        cells.push({ x: x, y: y, p: Math.random() * 6.28 });
+      }
+    }
+  }
+
+  function roguePos(t) {
+    // A slow wandering path through the right side of the field.
+    var cx = w * 0.7, cy = h * 0.5;
+    return {
+      x: cx + Math.sin(t * 0.00021) * w * 0.22 + Math.sin(t * 0.00053) * 26,
+      y: cy + Math.cos(t * 0.00017) * h * 0.3 + Math.cos(t * 0.00047) * 18
+    };
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, w, h);
+    var rg = roguePos(t), push = 74;
+    for (var i = 0; i < cells.length; i++) {
+      var c = cells[i];
+      var x = c.x + Math.sin(t * 0.0006 + c.p) * 1.4;
+      var y = c.y + Math.cos(t * 0.0005 + c.p) * 1.4;
+      var dx = x - rg.x, dy = y - rg.y, d = Math.sqrt(dx * dx + dy * dy);
+      if (d < push && d > 0.01) {
+        var f = (1 - d / push) * 20;
+        x += dx / d * f; y += dy / d * f;
+      }
+      // Text sits on the left, so cells fade in from left to right.
+      var fade = Math.max(0, Math.min(1, (c.x / w - 0.34) / 0.42));
+      ctx.globalAlpha = 0.05 + fade * 0.34;
+      ctx.strokeStyle = cyan; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.2832); ctx.stroke();
+      ctx.fillStyle = cyan;
+      ctx.beginPath(); ctx.arc(x, y, 4.2, 0, 6.2832); ctx.fill();
+    }
+    ctx.globalAlpha = 0.2; ctx.fillStyle = rogue;
+    ctx.beginPath(); ctx.arc(rg.x, rg.y, 28, 0, 6.2832); ctx.fill();
+    ctx.globalAlpha = 1; ctx.strokeStyle = rogue; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(rg.x, rg.y, 13, 0, 6.2832); ctx.stroke();
+    ctx.beginPath(); ctx.arc(rg.x, rg.y, 6.5, 0, 6.2832); ctx.fill();
+  }
+
+  function loop(t) { draw(t); requestAnimationFrame(loop); }
+
+  resize();
+  window.addEventListener('resize', function () { resize(); if (reduce) draw(9000); });
+  if (reduce) draw(9000); else requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
